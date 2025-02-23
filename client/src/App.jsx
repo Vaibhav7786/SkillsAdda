@@ -34,8 +34,10 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <div className="relative overflow-y-scroll scrollbar-thin min-h-screen">
+        <Router />
+        <Toaster />
+      </div>
     </QueryClientProvider>
   );
 }

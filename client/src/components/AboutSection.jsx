@@ -1,90 +1,98 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import BookDemoDialog from "./BookDemoDialog";
+import { BookDemo, BookDemoDialog } from "@/components/BookDemoDialog";
 import { useEffect, useState } from "react";
-
-const backgroundImages = [
-  "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=2000&q=80", // AI circuit
-  "https://images.unsplash.com/photo-1675187409865-b13f6394d7c8?auto=format&fit=crop&w=2000&q=80", // Digital brain
-  "https://images.unsplash.com/photo-1675187404643-3395b40a5f60?auto=format&fit=crop&w=2000&q=80", // Neural network
-  "https://images.unsplash.com/photo-1674029435164-c10f8c58dad3?auto=format&fit=crop&w=2000&q=80", // AI visualization
-  "https://images.unsplash.com/photo-1676371825819-b8a6c3011885?auto=format&fit=crop&w=2000&q=80", // Tech landscape
-  "https://images.unsplash.com/photo-1675426513194-5c10f9f73db0?auto=format&fit=crop&w=2000&q=80", // Digital waves
-  "https://images.unsplash.com/photo-1677442137299-4e072f0f2ba2?auto=format&fit=crop&w=2000&q=80", // AI patterns
-  "https://images.unsplash.com/photo-1675265396241-901fcc9adbf7?auto=format&fit=crop&w=2000&q=80", // Tech grid
-];
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8 } }
+  visible: { opacity: 1, transition: { duration: 0.8 } },
 };
 
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  visible: { opacity: 1, y: 0 },
 };
 
 export default function AboutSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [nextImageIndex, setNextImageIndex] = useState(1);
+  const [backgroundImages, setBackgroundImages] = useState([]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setNextImageIndex((prevIndex) =>
-        (prevIndex + 1) % backgroundImages.length
-      );
-      setTimeout(() => {
-        setCurrentImageIndex(nextImageIndex);
-      }, 1000); // Delay to ensure smooth transition
-    }, 4000); // Change image every 4 seconds
+    async function loadImages() {
+      const images = [];
+      for (let i = 1; i <= 25; i++) {
+        try {
+          const img = await import(`./images/${i}.png`);
+          images.push(img.default);
+        } catch (error) {
+          console.error(`Error importing image${i}.png:`, error);
+          images.push("/images/placeholder.png");
+        }
+      }
+      setBackgroundImages(images);
+    }
 
-    return () => clearInterval(interval);
-  }, [nextImageIndex]);
+    loadImages();
+  }, []);
+
+  useEffect(() => {
+    if (backgroundImages.length > 0) {
+      const interval = setInterval(() => {
+        setNextImageIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
+        setTimeout(() => {
+          setCurrentImageIndex(nextImageIndex);
+        }, 1000);
+      }, 4000);
+
+      return () => clearInterval(interval);
+    }
+  }, [nextImageIndex, backgroundImages]);
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Video background with overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-1">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="object-cover w-full h-full opacity-40"
+          className="object-cover w-full h-full"
         >
-          <source
+          {/* <source
             src="https://cdn.pixabay.com/vimeo/505977547/students-68271.mp4?width=1280&hash=f0d783c9d5dad00e3cd46b1c458f5e54f43f00df"
             type="video/mp4"
-          />
+          /> */}
         </video>
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.6,
-            filter: 'brightness(1.3) contrast(1.2) saturate(1.2)',
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-        />
-        {/* Preload next image */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${backgroundImages[nextImageIndex]})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0,
-            filter: 'brightness(1.3) contrast(1.2) saturate(1.2)',
-          }}
-        />
+        {backgroundImages.length > 0 && (
+          <>
+            <motion.div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
+                backgroundSize: "100%", // Zoom in
+                backgroundPosition: "center",
+                opacity: 0.1,
+                filter: "brightness(1.5)", // Increased brightness
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${backgroundImages[nextImageIndex]})`,
+                backgroundPosition: "center",
+                opacity: 0,
+                filter: "brightness(2.0)", // Increased brightness
+              }}
+            />
+          </>
+        )}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-purple-900/30 to-cyan-900/30" />
       </div>
 
-      {/* Content */}
       <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20">
         <motion.div
           className="max-w-3xl"
@@ -138,7 +146,7 @@ export default function AboutSection() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-purple-500 to-cyan-500 text-white hover:opacity-90 transform transition hover:scale-105"
-              onClick={() => window.location.href = '/courses'}
+              onClick={() => (window.location.href = "/courses")}
             >
               Start Your Journey
             </Button>

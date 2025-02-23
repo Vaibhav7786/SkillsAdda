@@ -86,5 +86,31 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+    function ({ addComponents }) {
+      addComponents({
+        ".scrollbar-thin": {
+          "&::-webkit-scrollbar": {
+            width: "10px", // Increase width for more visibility
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "rgba(255, 255, 255, 0.2)", // Adjust track color
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "rgba(100, 100, 255, 0.8)", // Darker thumb color
+            borderRadius: "6px", // Slightly larger radius for the thumb
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "rgba(100, 100, 255, 1)", // Darker on hover
+          },
+          "&": {
+            scrollbarWidth: "thin", // For Firefox
+            scrollbarColor: "rgba(100, 100, 255, 0.8) rgba(255, 255, 255, 0.2)", // Update Firefox colors
+          },
+        },
+      });
+    },
+  ],
 } satisfies Config;
