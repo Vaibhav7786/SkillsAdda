@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { BookDemo, BookDemoDialog } from "@/components/BookDemoDialog";
+import BookDemoDialog from "@/components/BookDemoDialog";
 import { useEffect, useState } from "react";
 
 const containerVariants = {
@@ -17,6 +17,7 @@ export default function AboutSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [nextImageIndex, setNextImageIndex] = useState(1);
   const [backgroundImages, setBackgroundImages] = useState([]);
+  const [isOpen,setIsOpen]=useState(false);
 
   useEffect(() => {
     async function loadImages() {
@@ -52,18 +53,6 @@ export default function AboutSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       <div className="absolute inset-1">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="object-cover w-full h-full"
-        >
-          {/* <source
-            src="https://cdn.pixabay.com/vimeo/505977547/students-68271.mp4?width=1280&hash=f0d783c9d5dad00e3cd46b1c458f5e54f43f00df"
-            type="video/mp4"
-          /> */}
-        </video>
         {backgroundImages.length > 0 && (
           <>
             <motion.div
@@ -135,7 +124,7 @@ export default function AboutSection() {
             variants={textVariants}
             className="text-primary-foreground/80 text-lg md:text-xl mb-8"
           >
-            Master industry-relevant skills with our comprehensive learning platform.
+            Master industry-relevant skills with our comprehensive learning platform. <br />
             Join the next generation of professionals.
           </motion.p>
 
@@ -150,7 +139,16 @@ export default function AboutSection() {
             >
               Start Your Journey
             </Button>
-            <BookDemoDialog />
+            <Button
+                onClick={() => setIsOpen(true)}
+                className="mt-0 mx-5 px-5 ml-8 py-[1.5em] bg-gradient-to-r from-purple-500 to-cyan-500 text-white hover:opacity-90 transform transition hover:scale-105"
+              >
+                Book Demo
+            </Button>
+           {
+            isOpen &&(  
+            <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen} courses={''}  />)
+}
           </motion.div>
         </motion.div>
       </div>

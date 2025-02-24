@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"; // Assuming you have "@/components/ui/dialog" setup
-import { Button } from "@/components/ui/button"; // Assuming you have "@/components/ui/button" setup
+import { Dialog, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -15,161 +9,171 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"; // Assuming you have "@/components/ui/form" setup
-import { Input } from "@/components/ui/input"; // Assuming you have "@/components/ui/input" setup
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { motion, AnimatePresence } from "framer-motion"; // Make sure to install framer-motion: npm install framer-motion
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
+// Course Options
+const courses = [
+  "Data Analytics",
+  "Full Stack Development",
+  "Advanced Excel with AI",
+  "Digital Marketing",
+  "Python",
+  "Data Science",
+];
+
+// Validation Schema
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().regex(/^\+?[1-9]\d{9,11}$/, "Invalid phone number"),
+  phone: z.string().regex(/^(?:\+\d{1,3})?\d{9,11}$/, "Invalid phone number"),
   course: z.string().min(1, "Please select a course"),
 });
 
-export function BookDemo({ course, isOpen, onClose }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    onClose();
-  };
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          className="fixed right-0 top-0 h-screen w-[400px] bg-background/80 backdrop-blur-lg border-l border-border shadow-xl"
-        >
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold">Book Demo Class</h3>
-              <Button variant="ghost" size="icon" onClick={onClose}>
-                <X size={20}/>
-              </Button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <FormLabel>Full Name</FormLabel>
-                <Input
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <FormLabel>Phone</FormLabel>
-                <Input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <FormLabel>Selected Course</FormLabel>
-                <Input value={course?.title || ""} disabled />
-              </div>
-              <Button type="submit" className="w-full">
-                Book Demo
-              </Button>
-            </form>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+interface BookDemoDialogProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function BookDemoDialog() {
+export default function BookDemoDialog({
+  isOpen,
+  setIsOpen,
+}: BookDemoDialogProps) {
+  const [selectedCourse, setSelectedCourse] = useState(() => {
+    return localStorage.getItem("selectedCourse") || "";
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       phone: "",
-      course: "",
+      course: selectedCourse,
     },
   });
 
+  function handleCourseChange(value: string) {
+    setSelectedCourse(value);
+    localStorage.setItem("selectedCourse", value);
+    form.setValue("course", value);
+  }
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.log("Form submitted:", values);
+    setIsOpen(false); // Close modal on submit
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          size="lg"
-          variant="outline"
-          className="border-white text-white hover:bg-white/10"
-        >
-          Book Demo
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Book a Demo</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your phone number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="course"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Course</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter course name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full">
-              Book Demo
+    <div className="text-center">
+      {/* Book Demo Modal */}
+      <Dialog
+        key={isOpen ? "open" : "closed"}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
+        <div className="absolute w-[100%] max-w-[400px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg p-8 -mt-56 ml-72 ">
+          {/* Header */}
+          <DialogHeader className="flex justify-between items-center">
+            <DialogTitle className="text-lg font-semibold text-white">
+              Book a Demo
+            </DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              <X className="h-6 w-6 text-white cursor-pointer" />
             </Button>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          </DialogHeader>
+
+          {/* Form */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Name Field */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your name"
+                        {...field}
+                        className="bg-transparent border-white/30 text-white placeholder-white/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+
+              {/* Phone Field */}
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your phone number"
+                        {...field}
+                        className="bg-transparent border-white/30 text-white placeholder-white/50"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+
+              {/* Course Dropdown */}
+              <FormField
+                control={form.control}
+                name="course"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-white">Course</FormLabel>
+                    <Select
+                      onValueChange={handleCourseChange}
+                      defaultValue={selectedCourse}
+                    >
+                      <SelectTrigger className="bg-transparent border-white/30 text-white">
+                        <SelectValue placeholder="Select a course" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-black/80 border-white/30 text-white">
+                        {courses.map((course, index) => (
+                          <SelectItem key={index} value={course}>
+                            {course}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="w-full bg-white text-black hover:bg-gray-300"
+              > Submit
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </Dialog>
+    </div>
   );
 }

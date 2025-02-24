@@ -11,3 +11,12 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(255, 255, 255);
+  border-radius: 4px;
+}

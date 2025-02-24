@@ -2,63 +2,100 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
-const blogPosts = [
-  {
-    title: "The Future of AI in Education",
-    date: "February 15, 2025",
-    excerpt: "Exploring how artificial intelligence is revolutionizing the learning experience.",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    title: "Essential Skills for 2025",
-    date: "February 10, 2025",
-    excerpt: "A comprehensive guide to the most in-demand professional skills.",
-    image: "https://images.unsplash.com/photo-1675187409865-b13f6394d7c8?auto=format&fit=crop&w=800&q=80",
-  },
-  // Add more blog posts as needed
-];
+import blogPosts from "@/data/blogPosts";
+const POSTS_PER_PAGE = 10;
+import { useState } from "react";
+import { Link } from "wouter";
 
 export default function Blog() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(blogPosts.length / POSTS_PER_PAGE);
+
+  const paginatedPosts = blogPosts.slice(
+    (currentPage - 1) * POSTS_PER_PAGE,
+    currentPage * POSTS_PER_PAGE
+  );
+  const handlePageChange = (direction) => {
+    if (direction === "next" && currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    } else if (direction === "prev" && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <main className="pt-20">
         <section className="py-20 px-4 md:px-8">
-          <div className="max-w-6xl mx-auto">
+          {/* Center everything within this container */}
+          <div className="max-w-6xl mx-auto text-center">
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text"
+              animate={{ y: -50, opacity: 1 }}
+              className="text-4xl md:text-5xl font-bold mb-6 text-white"
             >
               Latest Updates
             </motion.h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogPosts.map((post, index) => (
+
+            {/* Blog Listing */}
+            <div className="space-y-8">
+              {paginatedPosts.map((post, index) => (
                 <motion.div
                   key={post.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
+                  // The listing itself can be left-aligned; if you want it centered,
+                  // wrap each item in a container or apply flex justification.
+                  className="flex items-stretch gap-4 p-4 bg-neutral-900 rounded-lg text-left"
                 >
-                  <Card className="overflow-hidden hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300">
-                    <CardHeader className="p-0">
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-full h-48 object-cover"
-                      />
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <h2 className="text-xl font-semibold mb-2 bg-gradient-to-r from-purple-400 to-cyan-400 text-transparent bg-clip-text">
-                        {post.title}
-                      </h2>
-                      <p className="text-sm text-muted-foreground mb-4">{post.date}</p>
-                      <p className="text-muted-foreground">{post.excerpt}</p>
-                    </CardContent>
-                  </Card>
+                  {/* Left: Image */}
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-32 h-32 object-cover rounded-lg"
+                  />
+
+                  {/* Right: Text Content */}
+                  <div className="flex-1 flex flex-col justify-between text-white">
+                    <div>
+                      <Link href={`/blog/${post?.id}`}>
+                        <h2 className="text-xl font-bold mb-2 hover:underline">
+                          {post.title}
+                        </h2>
+                      </Link>
+                      <p className="text-gray-300">{post.excerpt}</p>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-4">{post.date}</p>
+                  </div>
                 </motion.div>
               ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="mt-8 flex items-center justify-between">
+              <button
+                onClick={() => handlePageChange("prev")}
+                disabled={currentPage === 1}
+                className="bg-cyan-500 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+
+              {/* Page Indicator */}
+              <span className="text-white">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                onClick={() => handlePageChange("next")}
+                disabled={currentPage === totalPages}
+                className="bg-cyan-500 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                Next
+              </button>
             </div>
           </div>
         </section>

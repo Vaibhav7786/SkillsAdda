@@ -20,15 +20,9 @@ const courses = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+
 
   const handleCourseClick = (course: string) => {
     const courseSlug = course.toLowerCase().replace(/\s+/g, '-');
@@ -72,12 +66,6 @@ export default function Navbar() {
             <Link href="/about" className="text-foreground/80 hover:text-foreground transition">
               About
             </Link>
-            <Link href="/reviews" className="text-foreground/80 hover:text-foreground transition">
-              Reviews
-            </Link>
-            <Link href="/team" className="text-foreground/80 hover:text-foreground transition">
-              Team
-            </Link>
             <Link href="/blog" className="text-foreground/80 hover:text-foreground transition">
               Blog
             </Link>
@@ -85,7 +73,6 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-4">
             <span className="text-sm text-cyan-400 font-mono">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
 
             {/* Mobile Menu Button */}

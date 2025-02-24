@@ -1,63 +1,70 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookDemo, BookDemoDialog } from "@/components/BookDemoDialog";
+import BookDemoDialog from "@/components/BookDemoDialog";
+import { useState } from "react";
 
 const courses = [
   {
     title: "Digital Marketing Mastery",
     description: "Learn modern digital marketing strategies and tools",
     duration: "12 weeks",
-    image: "https://images.unsplash.com/photo-1557804483-ef3ae78eca57?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1557804483-ef3ae78eca57?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Business Leadership",
     description: "Develop essential leadership and management skills",
     duration: "8 weeks",
-    image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Web Development",
     description: "Master full-stack web development",
     duration: "16 weeks",
-    image: "https://images.unsplash.com/photo-1526676537331-7747bf8278fc?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1526676537331-7747bf8278fc?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Data Science Fundamentals",
     description: "Learn data analysis and machine learning",
     duration: "14 weeks",
-    image: "https://images.unsplash.com/photo-1521312639858-5b042542f2a5?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1521312639858-5b042542f2a5?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Social Media Strategy",
     description: "Create effective social media campaigns",
     duration: "6 weeks",
-    image: "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80",
   },
   {
     title: "Content Creation",
     description: "Master content writing and strategy",
     duration: "10 weeks",
-    image: "https://images.unsplash.com/photo-1522204538344-922f76ecc041?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1522204538344-922f76ecc041?auto=format&fit=crop&w=800&q=80",
   },
 ];
 
 const cardVariants = {
-  initial: { 
-    opacity: 0, 
+  initial: {
+    opacity: 0,
     y: 20,
     rotateX: -10,
-    scale: 0.95
+    scale: 0.95,
   },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     y: 0,
     rotateX: 0,
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: "easeOut"
-    }
+      ease: "easeOut",
+    },
   },
   hover: {
     scale: 1.05,
@@ -65,12 +72,20 @@ const cardVariants = {
     rotateX: 5,
     transition: {
       duration: 0.3,
-      ease: "easeInOut"
-    }
-  }
+      ease: "easeInOut",
+    },
+  },
 };
 
 export default function CoursesSection() {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isOpen,setIsOpen]=useState(false);
+
+  const handleBookDemo = (course) => {
+    setSelectedCourse(course);
+    setIsOpen(true);
+  };
+
   return (
     <section className="py-20 px-4 md:px-8 bg-gradient-to-b from-background via-accent/5 to-background">
       <div className="max-w-6xl mx-auto">
@@ -101,7 +116,6 @@ export default function CoursesSection() {
                       alt={course.title}
                       className="w-full h-48 object-cover transform transition-all duration-500 group-hover:scale-110 group-hover:brightness-125"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-75 group-hover:opacity-90 transition-opacity duration-300" />
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -111,15 +125,27 @@ export default function CoursesSection() {
                   <p className="text-muted-foreground mb-4 line-clamp-2 transition-colors duration-300 group-hover:text-white/90">
                     {course.description}
                   </p>
-                  <Badge variant="secondary" className="bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors duration-300">
+                  <Badge
+                    variant="secondary"
+                    className="bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-colors duration-300"
+                  >
                     {course.duration}
                   </Badge>
+                  <button
+                    onClick={() => handleBookDemo(course)}
+                    className="mt-4 text-cyan-500"
+                  >
+                    Book Demo
+                  </button>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
         </div>
       </div>
+      {selectedCourse && (
+            <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen}  />
+          )}
     </section>
   );
 }

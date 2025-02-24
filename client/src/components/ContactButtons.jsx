@@ -25,13 +25,13 @@ export default function ContactButtons() {
       {/* Call Button */}
       <motion.a
         href={`tel:${phoneNumber}`}
-        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-purple-500 to-cyan-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 hover:opacity-90 transition-opacity duration-300"
+        className="fixed bottom-4 left-4 z-40 bg-gradient-to-r from-purple-500 to-cyan-500 text-white px-3 py-2 rounded-full shadow-lg flex items-center gap-1 hover:opacity-90 transition-opacity duration-300"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Phone className="w-5 h-5" />
+        <Phone className="w-4 h-4" />
         <span className="font-medium">Call Us: {phoneNumber}</span>
       </motion.a>
     </>
