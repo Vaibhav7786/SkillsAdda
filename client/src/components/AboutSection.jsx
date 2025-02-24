@@ -148,8 +148,18 @@ export default function AboutSection() {
            {
             isOpen &&(  
             <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen} courses={''}  />)
-}
+           }
           </motion.div>
+          <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          key={currentImageIndex}
+          className="relative -bottom-4 right-8 bg-black/50 px-4 py-2 w-40 rounded-full ml-10 "
+        >
+          <p className="text-sm text-gray-200">
+            Featured: {backgroundImages[currentImageIndex].label}
+          </p>
+        </motion.div>
         </motion.div>
       </div>
     </section>
