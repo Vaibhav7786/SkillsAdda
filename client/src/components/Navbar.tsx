@@ -112,12 +112,6 @@ export default function Navbar() {
               <Link href="/about" className="text-foreground/80 hover:text-foreground transition">
                 About
               </Link>
-              <Link href="/reviews" className="text-foreground/80 hover:text-foreground transition">
-                Reviews
-              </Link>
-              <Link href="/team" className="text-foreground/80 hover:text-foreground transition">
-                Team
-              </Link>
               <Link href="/blog" className="text-foreground/80 hover:text-foreground transition">
                 Blog
               </Link>

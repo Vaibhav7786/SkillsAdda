@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import WhySection from "@/components/WhySection";
 import FAQSection from "@/components/FAQSection";
 
+
 export default function About() {
   return (
     <div className="min-h-screen bg-background">

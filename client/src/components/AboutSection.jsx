@@ -3,21 +3,67 @@ import { Button } from "@/components/ui/button";
 import BookDemoDialog from "@/components/BookDemoDialog";
 import { useEffect, useState } from "react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.8 } },
-};
+const courses = [
+  "Data Analytics",
+  "Full Stack Development",
+  "Advance Excel with AI",
+  "Digital Marketing",
+  "Python",
+  "Data Science",
+];
 
-const textVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+const CourseBanner = ({currentImageIndex }) => {
+  const [courseIndex, setCourseIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCourseIndex((prevIndex) => (prevIndex + 1) % courses.length);
+    }, 3000); // Change course every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      key={currentImageIndex}
+      className="relative -bottom-4 right-8 px-4 py-4 w-[40%] rounded-full ml-10 bg-black/50 overflow-hidden"
+    >
+      {/* Moving Silver Border Effect */}
+      <motion.div
+        className="absolute inset-0 rounded-full border-[3px] border-transparent"
+        animate={{
+          background: [
+            "linear-gradient(90deg, rgba(192,192,192,0.2), rgba(255,255,255,0.8), rgba(192,192,192,0.2))",
+            "linear-gradient(90deg, rgba(255,255,255,0.8), rgba(192,192,192,0.2), rgba(255,255,255,0.8))",
+          ],
+          backgroundPosition: ["0% 50%", "100% 50%"],
+        }}
+        transition={{
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 2,
+          ease: "linear",
+        }}
+        style={{
+          maskImage: "linear-gradient(white, white)",
+          WebkitMaskImage: "linear-gradient(white, white)",
+        }}
+      />
+
+      <p className="relative z-10 text-sm text-gray-200">
+        Featured | {courses[courseIndex]}
+      </p>
+    </motion.div>
+  );
 };
 
 export default function AboutSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [nextImageIndex, setNextImageIndex] = useState(1);
   const [backgroundImages, setBackgroundImages] = useState([]);
-  const [isOpen,setIsOpen]=useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     async function loadImages() {
@@ -27,7 +73,7 @@ export default function AboutSection() {
           const img = await import(`./images/${i}.png`);
           images.push(img.default);
         } catch (error) {
-          console.error(`Error importing image${i}.png:`, error);
+          console.error(`Error importing image ${i}.png:`, error);
           images.push("/images/placeholder.png");
         }
       }
@@ -59,10 +105,10 @@ export default function AboutSection() {
               className="absolute inset-0"
               style={{
                 backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
-                backgroundSize: "100%", // Zoom in
+                backgroundSize: "100%",
                 backgroundPosition: "center",
                 opacity: 0.1,
-                filter: "brightness(1.5)", // Increased brightness
+                filter: "brightness(1.5)",
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.6 }}
@@ -74,7 +120,7 @@ export default function AboutSection() {
                 backgroundImage: `url(${backgroundImages[nextImageIndex]})`,
                 backgroundPosition: "center",
                 opacity: 0,
-                filter: "brightness(2.0)", // Increased brightness
+                filter: "brightness(2.0)",
               }}
             />
           </>
@@ -85,14 +131,14 @@ export default function AboutSection() {
       <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-20">
         <motion.div
           className="max-w-3xl"
-          variants={containerVariants}
           initial="hidden"
           animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { duration: 0.8 } },
+          }}
         >
-          <motion.p
-            variants={textVariants}
-            className="text-primary-foreground/90 text-lg mb-4"
-          >
+          <motion.p className="text-primary-foreground/90 text-lg mb-4">
             Premier Skills Development Platform
           </motion.p>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
@@ -120,18 +166,12 @@ export default function AboutSection() {
               Skills
             </motion.span>
           </h1>
-          <motion.p
-            variants={textVariants}
-            className="text-primary-foreground/80 text-lg md:text-xl mb-8"
-          >
+          <motion.p className="text-primary-foreground/80 text-lg md:text-xl mb-8">
             Master industry-relevant skills with our comprehensive learning platform. <br />
             Join the next generation of professionals.
           </motion.p>
 
-          <motion.div
-            variants={textVariants}
-            className="flex flex-col sm:flex-row gap-4"
-          >
+          <motion.div className="flex flex-col sm:flex-row gap-4">
             <Button
               size="lg"
               className="bg-gradient-to-r from-purple-500 to-cyan-500 text-white hover:opacity-90 transform transition hover:scale-105"
@@ -140,27 +180,17 @@ export default function AboutSection() {
               Start Your Journey
             </Button>
             <Button
-                onClick={() => setIsOpen(true)}
-                className="mt-0 mx-5 px-5 ml-8 py-[1.5em] bg-gradient-to-r from-purple-500 to-cyan-500 text-white hover:opacity-90 transform transition hover:scale-105"
-              >
-                Book Demo
+              onClick={() => setIsOpen(true)}
+              className="mt-0 mx-5 px-5 ml-8 py-[1.5em] bg-gradient-to-r from-purple-500 to-cyan-500 text-white hover:opacity-90 transform transition hover:scale-105"
+            >
+              Book Demo
             </Button>
-           {
-            isOpen &&(  
-            <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen} courses={''}  />)
-           }
+            {isOpen && <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen} courses={""} />}
           </motion.div>
-          <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          key={currentImageIndex}
-          className="relative -bottom-4 right-8 bg-black/50 px-4 py-2 w-40 rounded-full ml-10 "
-        >
-          <p className="text-sm text-gray-200">
-            Featured: {backgroundImages[currentImageIndex].label}
-          </p>
+          <CourseBanner />
         </motion.div>
-        </motion.div>
+
+        
       </div>
     </section>
   );

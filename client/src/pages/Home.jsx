@@ -6,6 +6,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import ContactButtons from "@/components/ContactButtons";
+import TeamSection from "../components/TeamSection";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <WhySection />
         <TestimonialsSection />
         <FAQSection />
+        <TeamSection/>
         <ContactButtons />
         <Footer />
       </motion.main>

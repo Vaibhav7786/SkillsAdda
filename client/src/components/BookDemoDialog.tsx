@@ -72,6 +72,9 @@ export default function BookDemoDialog({
     setIsOpen(false); // Close modal on submit
   }
 
+  console.log("isopen : ",setIsOpen);
+  
+
   return (
     <div className="text-center">
       {/* Book Demo Modal */}
