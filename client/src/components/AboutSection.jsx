@@ -185,7 +185,7 @@ export default function AboutSection() {
             >
               Book Demo
             </Button>
-            {isOpen && <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen} courses={""} />}
+            {isOpen && <BookDemoDialog isOpen={isOpen} setIsOpen={setIsOpen} />}
           </motion.div>
           <CourseBanner />
         </motion.div>

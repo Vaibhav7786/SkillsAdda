@@ -7,41 +7,37 @@ export default function Footer() {
         <div>
           <h3 className="font-bold text-lg mb-4">Skills Adda</h3>
           <p className="text-muted-foreground">
-            Empowering careers through quality education
+            Empowering careers through <br />quality education
           </p>
         </div>
         <div>
           <h3 className="font-bold text-lg mb-4">Quick Links</h3>
           <ul className="space-y-2">
             <li>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a href="http://localhost:5000/about" className="text-muted-foreground hover:text-primary">
                 About Us
               </a>
             </li>
             <li>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <a href="http://localhost:5000/courses" className="text-muted-foreground hover:text-primary">
                 Courses
               </a>
             </li>
             <li>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                Team
+              <a href="http://localhost:5000/blog" className="text-muted-foreground hover:text-primary">
+                Blog
               </a>
             </li>
-            <li>
-              <a href="#" className="text-muted-foreground hover:text-primary">
-                Contact
-              </a>
-            </li>
+            
           </ul>
         </div>
         <div>
           <h3 className="font-bold text-lg mb-4">Contact Us</h3>
           <address className="text-muted-foreground not-italic">
-            <p>123 Education Street</p>
-            <p>Indore, India</p>
-            <p>Phone: +91 789 879 7660</p>
-            <p>Email: info@skillsadda.com</p>
+            <p>📍 7, Ahinsa Tower</p>
+            <p>🏙️ Indore, India</p>
+            <p>📲 +91 789 879 7660</p>
+            <p>📧 skillskadda@gmail.com</p>
           </address>
         </div>
         <div>
@@ -54,13 +50,13 @@ export default function Footer() {
             >
               <FaFacebook size={24} />
             </a>
-            <a
+            {/* <a
               href="#"
               className="text-muted-foreground hover:text-primary"
               aria-label="Twitter"
             >
               <FaTwitter size={24} />
-            </a>
+            </a> */}
             <a
               href="#"
               className="text-muted-foreground hover:text-primary"
